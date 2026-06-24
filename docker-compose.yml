@@ -1,5 +1,51 @@
+version: "3.9"
+
 services:
+  backend:
+    build: ./backend
+    container_name: fastigo-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/fastigo
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    build: ./frontend
+    container_name: fastigo-frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
   postgres:
     image: postgres:16
+    container_name: fastigo-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fastigo
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   redis:
     image: redis:7
+    container_name: fastigo-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+volumes:
+  pgdata:
