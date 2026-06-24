@@ -36,7 +36,7 @@ export const getTaskById = async (
 
     const task =
         await taskService.getTaskByIdService(
-            req.params.id
+            (req as any).params.id
         );
 
     if (!task) {
@@ -55,7 +55,7 @@ export const updateTask = async (
 
     const task =
         await taskService.updateTaskService(
-            req.params.id,
+            (req as any).params.id,
             req.body
         );
 
@@ -69,7 +69,7 @@ export const deleteTask = async (
 
     const result =
         await taskService.deleteTaskService(
-            req.params.id
+            (req as any).params.id
         );
 
     res.json(result);
